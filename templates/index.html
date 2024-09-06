@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control::placeholder {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <h2 class="text-center mb-4">Heart Disease Prediction</h2>
+                    <form action="/predict" method="POST">
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" name="age" placeholder="Enter age in years" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-control" id="gender" name="gender" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="chest_pain" class="form-label">Chest Pain Type</label>
+                            <select class="form-control" id="chest_pain" name="chest_pain" required>
+                                <option value="" disabled selected>Select chest pain type</option>
+                                <option value="1">Typical Angina</option>
+                                <option value="2">Atypical Angina</option>
+                                <option value="3">Non-Anginal Pain</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resting_bp" class="form-label">Resting BP (mm Hg)</label>
+                            <input type="number" class="form-control" id="resting_bp" name="resting_bp" placeholder="Enter resting blood pressure" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cholesterol" class="form-label">Cholesterol (mg/dL)</label>
+                            <input type="number" class="form-control" id="cholesterol" name="cholesterol" placeholder="Enter cholesterol level" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fasting_bs" class="form-label">Fasting Blood Sugar</label>
+                            <select class="form-control" id="fasting_bs" name="fasting_bs" required>
+                                <option value="" disabled selected>Select fasting blood sugar</option>
+                                <option value="0">&lt; 120 mg/dl</option>
+                                <option value="1">&gt;= 120 mg/dl</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rest_ecg" class="form-label">Resting ECG</label>
+                            <select class="form-control" id="rest_ecg" name="rest_ecg" required>
+                                <option value="" disabled selected>Select resting ECG result</option>
+                                <option value="0">Normal</option>
+                                <option value="1">ST-T wave abnormality</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="max_hr" class="form-label">Maximum Heart Rate</label>
+                            <input type="number" class="form-control" id="max_hr" name="max_hr" placeholder="Enter maximum heart rate" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exercise_angina" class="form-label">Exercise Angina</label>
+                            <select class="form-control" id="exercise_angina" name="exercise_angina" required>
+                                <option value="" disabled selected>Select exercise angina</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="oldpeak" class="form-label">Oldpeak</label>
+                            <input type="number" step="0.1" class="form-control" id="oldpeak" name="oldpeak" placeholder="Enter oldpeak value" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="slope" class="form-label">Slope</label>
+                            <select class="form-control" id="slope" name="slope" required>
+                                <option value="" disabled selected>Select slope</option>
+                                <option value="0">Upsloping</option>
+                                <option value="1">Flat</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ca" class="form-label">CA (No. of vessels)</label>
+                            <input type="number" class="form-control" id="ca" name="ca" placeholder="Enter number of vessels" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="thal" class="form-label">Thalassemia</label>
+                            <select class="form-control" id="thal" name="thal" required>
+                                <option value="" disabled selected>Select thalassemia status</option>
+                                <option value="1">Normal</option>
+                                <option value="2">Fixed Defect</option>
+                                <option value="3">Reversible Defect</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Predict</button>
+                    </form>
+
+                    <!-- Prediction result section -->
+                    {% if prediction_text %}
+                    <div class="alert alert-info result text-center">
+                        <h4>Prediction Result</h4>
+                        <p>{{ prediction_text }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
